@@ -9,8 +9,7 @@ using System.Text;
 
 namespace PluginUpdater.ViewModels
 {
-    
-    public class PluginsUsedCollection : ObservableCollection<PluginsUsed>, INotifyCollectionChanged
+    public class PluginsUsedCollection : Collection<PluginsUsed>
     {
         public PluginsUsedCollection()
         {
@@ -18,7 +17,9 @@ namespace PluginUpdater.ViewModels
 
         public bool IsNew(IPlugin plugin)
         {
-            return !IsExist(plugin);
+            var pluginUsed = Items.FirstOrDefault(p => p.ID.Equals(plugin.ID));
+            return pluginUsed == null || pluginUsed.Version < plugin.Version;
+            //return !IsExist(plugin);
         }
 
         public bool IsExist(IPlugin plugin)

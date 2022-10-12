@@ -1,4 +1,5 @@
-﻿using PluginUpdater.ViewModels;
+﻿using PluginUpdater.Engine;
+using PluginUpdater.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -32,7 +33,7 @@ namespace PluginUpdater.Controls
 
         private void LoadedChange(object sender, RoutedEventArgs args)
         {
-            ViewModel.StartInstall();
+            ViewModel.StartInstall(new PluginsInstaller());
         }
     }
 }

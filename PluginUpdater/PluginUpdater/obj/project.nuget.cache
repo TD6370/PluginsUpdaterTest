@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "UybGVuYUquF8QFRi/gr4aVA3XSCbp1SBnOK1swSDHFn5ESiZLcMspvzNmUlWkgiUeEWQimqwek1OdSnla2yf4Q==",
+  "dgSpecHash": "WzoXgrTOn0H7U+7rYnmdVlU39MJmUbIzEBnE8ycswHzm/z28ZTW2ZcB1tylapVMC2PxuNotzrGTAjmn42E3sWQ==",
   "success": true,
-  "projectFilePath": "E:\\Projects\\TESTS\\PluginUpdater\\PluginUpdater\\PluginUpdater\\PluginUpdater.csproj",
+  "projectFilePath": "E:\\Projects\\TESTS\\GitPluginUpdater\\PluginUpdater\\PluginUpdater\\PluginUpdater.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

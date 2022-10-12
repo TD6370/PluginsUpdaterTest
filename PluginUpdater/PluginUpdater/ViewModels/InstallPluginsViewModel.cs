@@ -2,10 +2,8 @@
 using PluginUpdater.Models;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -47,17 +45,15 @@ namespace PluginUpdater.ViewModels
             m_pluginsUsed = pluginsUsed;
         }
 
-        private void DownloadProgressChanged(int progress)
-        {
-            //ProgressInstallValue = progress;
-        }
-
-        public async Task StartInstall()
+        public async Task StartInstall(IPluginsInstaller pluginsInstaller)
         {
             try
             {
-                //Thread.Sleep(1000);
-                var test = Task.CurrentId.ToString();
+                pluginsInstaller.InstallPath = m_installPath;
+                pluginsInstaller.ProgressActtion = progress =>
+                {
+                    ProgressInstallValue = progress;
+                };
 
                 var pluginsNeedDelete = FilterRemovePlugins();
                 var pluginsNeedInstall = FilterNewPlugins();
@@ -65,11 +61,12 @@ namespace PluginUpdater.ViewModels
                 ProgressInstallMaxValue = pluginsNeedDelete.Count() + pluginsNeedInstall.Count();
                 ProgressInstallValue = 0;
 
-                await DeletePluginsAsync(pluginsNeedDelete);
-                await InstallPluginsAsync(pluginsNeedInstall);
+                await pluginsInstaller.DeletePluginsAsync(pluginsNeedDelete);
+                await pluginsInstaller.InstallPluginsAsync(pluginsNeedInstall);
 
                 IsCompleted = true;
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 Logger.Error(ex, "Error on InstallPluginsViewModel.StartInstall");
                 MessageBox.Show(ex.Message, "Error on Start install plugins", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -91,59 +88,7 @@ namespace PluginUpdater.ViewModels
         {
             return m_plugins.Where(p => !p.Checked && m_pluginsUsed.IsExist(p));
         }
-
-        private async Task InstallPluginsAsync(IEnumerable<IPlugin> plugins)
-        {
-            await Task.Run(() =>
-            {
-                var test = Task.CurrentId.ToString();
-
-                foreach (var plugin in plugins)
-                {
-                    string fileName = plugin.GetNameFile();
-                    string pathInstallFile = string.Concat(m_installPath, $"\\{plugin.ID}\\{fileName}");
-                    
-                    //TEST
-                    //pathInstallFile += "_" + plugin.Version;
-
-                    string pathInstall = Path.GetDirectoryName(pathInstallFile);
-                    bool isExist = Storage.Instance.CheckDirectory(pathInstall);
-                    if (isExist)
-                    {
-                        plugin.Delete(pathInstall);
-                    }
-                    plugin.DownloadProgressChanged = DownloadProgressChanged;
-                    plugin.Install(pathInstallFile);
-
-                    ProgressInstallValue++;
-                }
-
-                //TEST
-                Thread.Sleep(500);
-            });
-        }
-
-        private async Task DeletePluginsAsync(IEnumerable<IPlugin> plugins)
-        {
-            await Task.Run(() =>
-            {
-                var test = Task.CurrentId.ToString();
-
-                foreach (var plugin in plugins)
-                {
-                    string pathInstall = string.Concat(m_installPath, $"\\{plugin.ID}");
-                    bool isExist = Storage.Instance.CheckDirectory(pathInstall);
-                    if (isExist)
-                        plugin.Delete(pathInstall);
-
-                    ProgressInstallValue++;
-
-                    //TEST
-                    Thread.Sleep(1000);
-                }
-            });
-        }
-
+        
         private void Close()
         {
             if (CloseAction != null)

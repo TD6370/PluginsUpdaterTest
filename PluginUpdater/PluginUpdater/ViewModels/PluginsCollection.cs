@@ -44,7 +44,9 @@ namespace PluginUpdater.ViewModels
 
         private void CheckedWhenExist(PluginsUsed pluginUsed)
         {
-            var item = Items.FirstOrDefault(p => p.ID.Equals(pluginUsed.ID) && p.Version.Equals(pluginUsed.Version));
+            //var item = Items.FirstOrDefault(p => p.ID.Equals(pluginUsed.ID) && p.Version.Equals(pluginUsed.Version));
+            //TEST
+            var item = Items.FirstOrDefault(p => p.ID.Equals(pluginUsed.ID));
             if (item != null)
                 item.Checked = true;
         }

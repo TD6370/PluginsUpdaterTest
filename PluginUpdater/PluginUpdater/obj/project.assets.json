@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\Projects\\TESTS\\PluginUpdater\\PluginUpdater\\PluginUpdater\\PluginUpdater.csproj",
+      "projectUniqueName": "E:\\Projects\\TESTS\\GitPluginUpdater\\PluginUpdater\\PluginUpdater\\PluginUpdater.csproj",
       "projectName": "PluginUpdater",
-      "projectPath": "E:\\Projects\\TESTS\\PluginUpdater\\PluginUpdater\\PluginUpdater\\PluginUpdater.csproj",
+      "projectPath": "E:\\Projects\\TESTS\\GitPluginUpdater\\PluginUpdater\\PluginUpdater\\PluginUpdater.csproj",
       "packagesPath": "C:\\Users\\Hexagon\\.nuget\\packages\\",
-      "outputPath": "E:\\Projects\\TESTS\\PluginUpdater\\PluginUpdater\\PluginUpdater\\obj\\",
+      "outputPath": "E:\\Projects\\TESTS\\GitPluginUpdater\\PluginUpdater\\PluginUpdater\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Hexagon\\AppData\\Roaming\\NuGet\\NuGet.Config",

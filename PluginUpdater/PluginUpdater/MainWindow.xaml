@@ -7,13 +7,14 @@
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         Title="Plugin updater" 
-        Height="450" 
+        Height="200" 
         MinHeight="200" 
         Width="510"
         MinWidth="510"
-        SizeToContent="WidthAndHeight"
-        Visibility="{Binding ApplicationVisibility}"
+        
+        Visibility="{Binding ApplicationVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
         >
+    <!--SizeToContent="WidthAndHeight"-->
     <!--Visibility="{Binding ApplicationVisibility, Converter={StaticResource boolToVisibilityConverter}}"-->
     <Window.Resources>
         <ResourceDictionary>
@@ -30,14 +31,10 @@
                    Margin="10"
                    Visibility="{Binding IsProgress, Converter={StaticResource boolToVisibilityConverter}}"/>
         <ListView 
-                Width="500"
-                Height="Auto"
                 Grid.Row="0"
                 Margin="5"
                 ItemsSource="{Binding Plugins}"
                 Visibility="{Binding IsProgress, Converter={StaticResource inverseBoolToVisibilityConverter}}">
-            <!--Visibility="Hidden">-->
-            <!--Visibility="{Binding IsProgress, Converter={StaticResource inverseBoolToVisibilityConverter}}">-->
             
             <ListView.View>
                 <GridView>

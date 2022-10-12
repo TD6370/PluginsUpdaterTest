@@ -138,6 +138,7 @@ namespace PluginUpdater.ViewModels
                 installVM.CloseAction = () => { installControl.Close(); };
                 installControl.DataContext = installVM;
                 SwithVisible();
+
                 installControl.ShowDialog();
                 if (installVM.IsCompleted)
                 {
@@ -160,6 +161,7 @@ namespace PluginUpdater.ViewModels
         private void SwithVisible()
         {
             ApplicationVisibility = ApplicationVisibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
+            //ApplicationVisibility = ApplicationVisibility == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
         }
 
         private void Exit()
