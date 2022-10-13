@@ -25,10 +25,11 @@ namespace PluginUpdater.Engine
             await Task.Run(() => {
                 plugins = new List<Plugin>
                 {
-                    new Plugin { ID = "1", Version=1, DownloadLink ="http://depositfiles.com/files/zzk9c66om"},
-                    new Plugin { ID = "2", Version=1, DownloadLink ="http://depositfiles.com/files/xj27n5lbf"},
-                    new Plugin { ID = "3", Version=1, DownloadLink ="http://depositfiles.com/files/bm9hm8ci1"},
-                    new Plugin { ID = "4", Version=1, DownloadLink ="http://depositfiles.com/files/skgshzxo5"}
+                    new Plugin { ID = "1", Version=1, DownloadLink ="https://drive.google.com/uc?export=download&id=1KR500Zp-wlDNRp2HkkqXp0fAgAUim7sA"},
+                    new Plugin { ID = "2", Version=1, DownloadLink ="https://drive.google.com/uc?export=download&id=1ldIiVMzvvNvFUtOt4Z8wTAIfVw4vYGkj"},
+                    new Plugin { ID = "3", Version=1, DownloadLink ="https://drive.google.com/uc?export=download&id=1P3FQmxfl6kUrLjm4wbnBOC09jp4LulpR"},
+                    new Plugin { ID = "4", Version=1, DownloadLink ="https://drive.google.com/uc?export=download&id=15bQbgQEodC0Cro4y1CTWhbVdLX2V_qZ-"},
+                    new Plugin { ID = "5", Version=1, DownloadLink ="https://drive.google.com/uc?export=download&id=1QXYtJr9OLC4ysYRZZBvKnf8ZK5ngA8ym"}
                 };
 
                 Random rnd = new Random();

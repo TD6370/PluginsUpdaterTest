@@ -7,43 +7,95 @@
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         Title="Plugin updater" 
-        Height="200" 
+        Height="Auto" 
         MinHeight="200" 
         Width="510"
         MinWidth="510"
-        
+        SizeToContent="Height"
         Visibility="{Binding ApplicationVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
         >
     <!--SizeToContent="WidthAndHeight"-->
     <!--Visibility="{Binding ApplicationVisibility, Converter={StaticResource boolToVisibilityConverter}}"-->
     <Window.Resources>
         <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/PluginUpdater;component/Controls/ControlStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+
             <local:BoolToVisibilityConverter x:Key="boolToVisibilityConverter" />
             <local:InverseBoolToVisibilityConverter x:Key="inverseBoolToVisibilityConverter" />
+            <local:StatusToColorConverter x:Key="statusToColorConverter" />
+            <local:StatusToMessageConverter x:Key="statusToMessageConverter" />
+            
         </ResourceDictionary>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto" 
+                           MinHeight="40"/>
         </Grid.RowDefinitions>
         <TextBlock Text="{Binding WarningMessage}"
+                   HorizontalAlignment="Stretch"
+                   TextWrapping="Wrap"
                    Margin="10"
-                   Visibility="{Binding IsProgress, Converter={StaticResource boolToVisibilityConverter}}"/>
+                   Visibility="{Binding IsProgress, Converter={StaticResource boolToVisibilityConverter}}">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsFail}">
+                            <Setter Property="Foreground" Value="Red"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
         <ListView 
                 Grid.Row="0"
                 Margin="5"
                 ItemsSource="{Binding Plugins}"
                 Visibility="{Binding IsProgress, Converter={StaticResource inverseBoolToVisibilityConverter}}">
-            
+            <ListView.ItemContainerStyle>
+                <Style TargetType="{x:Type ListViewItem}"  >
+                    <Setter Property="Margin" Value="0"/>
+                    <Setter Property="Padding"  Value="0"/>
+                    <Setter Property="Background"
+                                        Value="{Binding Status, Converter={StaticResource statusToColorConverter}, ConverterParameter='Background'}"/>
+
+                </Style>
+            </ListView.ItemContainerStyle>
             <ListView.View>
                 <GridView>
                     <GridViewColumn DisplayMemberBinding="{Binding Path=ID}" 
                                     Header="ID" 
                                     Width="Auto"/>
-                    <GridViewColumn DisplayMemberBinding="{Binding Path=Version}" 
-                                    Header="Version" 
-                                    Width="Auto"/>
+                    
+                    <GridViewColumn Header="Версия"  
+                                    DisplayMemberBinding="{Binding Path=Version}"
+                                    Width="Auto">
+                        <GridViewColumn.CellTemplate>
+                            
+                            <DataTemplate>
+                                <Grid>
+                                    <Border
+                                        MinWidth="100"
+                                        Padding="3"
+                                        Margin="3"
+                                        BorderThickness="1"
+                                        Background="Gray"
+                                        CornerRadius="2"
+                                        >
+                                        <TextBlock
+                                            TextAlignment="Center"
+                                            Text="{Binding Version}"
+                                            />
+                                    </Border>
+                                </Grid>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    
 
                     <GridViewColumn Header="     " >
                         <GridViewColumn.CellTemplate>
@@ -52,6 +104,15 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
+
+                    <GridViewColumn Header="Статус" Width="100" >
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Status, Converter={StaticResource statusToMessageConverter}}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
 
                 </GridView>
             </ListView.View>
@@ -64,8 +125,9 @@
                 Margin="5"
                 VerticalAlignment="Bottom"
                 Height="30"
+                Style="{StaticResource ButtonLightStyle}"
                 Content="Продолжить"
-                Command="{Binding ApplayCommand}"
+                Command="{Binding ApplayCommand}" Background="#FFFFFEE3"
                 />
         </Grid>
     </Grid>

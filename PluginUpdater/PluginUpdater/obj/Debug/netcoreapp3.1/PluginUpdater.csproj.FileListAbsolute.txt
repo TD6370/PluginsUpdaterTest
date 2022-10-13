@@ -42,3 +42,4 @@ E:\Projects\TESTS\GitPluginUpdater\PluginUpdater\PluginUpdater\obj\Debug\netcore
 E:\Projects\TESTS\GitPluginUpdater\PluginUpdater\PluginUpdater\obj\Debug\netcoreapp3.1\PluginUpdater.dll
 E:\Projects\TESTS\GitPluginUpdater\PluginUpdater\PluginUpdater\obj\Debug\netcoreapp3.1\PluginUpdater.pdb
 E:\Projects\TESTS\GitPluginUpdater\PluginUpdater\PluginUpdater\obj\Debug\netcoreapp3.1\PluginUpdater.genruntimeconfig.cache
+E:\Projects\TESTS\GitPluginUpdater\PluginUpdater\PluginUpdater\obj\Debug\netcoreapp3.1\Controls\ControlStyles.baml

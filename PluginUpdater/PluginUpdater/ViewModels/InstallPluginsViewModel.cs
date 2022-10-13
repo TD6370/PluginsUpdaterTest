@@ -17,6 +17,16 @@ namespace PluginUpdater.ViewModels
         public Action CloseAction { private get; set; }
         public bool IsCompleted { get; private set; }
 
+        private ProgressInfoCollection m_progressCollection;
+        //public ProgressInfoCollection ProgressCollection => m_progressCollection;
+        public ProgressInfoCollection ProgressCollection
+        {
+            get
+            {
+                return m_progressCollection;
+            }
+        }
+
         private int m_progressInstallValue;
         public int ProgressInstallValue
         {
@@ -45,15 +55,19 @@ namespace PluginUpdater.ViewModels
             m_pluginsUsed = pluginsUsed;
         }
 
+        public void StartInstall()
+        {
+            StartInstall(new PluginsInstaller());
+        }
+
         public async Task StartInstall(IPluginsInstaller pluginsInstaller)
         {
             try
             {
+                m_progressCollection = new ProgressInfoCollection();
+
                 pluginsInstaller.InstallPath = m_installPath;
-                pluginsInstaller.ProgressActtion = progress =>
-                {
-                    ProgressInstallValue = progress;
-                };
+                pluginsInstaller.ProgressAction = progressInfo => { ProgressChange(progressInfo); };
 
                 var pluginsNeedDelete = FilterRemovePlugins();
                 var pluginsNeedInstall = FilterNewPlugins();
@@ -64,6 +78,9 @@ namespace PluginUpdater.ViewModels
                 await pluginsInstaller.DeletePluginsAsync(pluginsNeedDelete);
                 await pluginsInstaller.InstallPluginsAsync(pluginsNeedInstall);
 
+                //TEST
+                //return;
+
                 IsCompleted = true;
             }
             catch (Exception ex)
@@ -72,6 +89,16 @@ namespace PluginUpdater.ViewModels
                 MessageBox.Show(ex.Message, "Error on Start install plugins", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             Close();
+        }
+
+        private void ProgressChange(ProgressInfo progressInfo)
+        {
+            WpfHelper.InvokeMethod(() =>
+            {
+                m_progressCollection.Update(progressInfo);
+                OnPropertyChanged(nameof(ProgressCollection));
+                ProgressInstallValue = progressInfo.Value;
+            });
         }
 
         public bool IsInstallValid()

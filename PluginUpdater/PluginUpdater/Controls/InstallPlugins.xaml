@@ -7,28 +7,25 @@
         mc:Ignorable="d"
         Title="Install plugins" 
         WindowStartupLocation="CenterScreen"
-        Height="120" 
+        Height="400" 
         Width="500"
         ShowInTaskbar="False"
         ResizeMode="NoResize"
         >
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="99*"/>
-            <ColumnDefinition Width="151*"/>
-        </Grid.ColumnDefinitions>
+       
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0" Grid.ColumnSpan="2">
+        <Grid Grid.Row="0">
             <StackPanel>
                 <TextBlock 
                     Margin="5"
                     TextAlignment="Center"
                     FontSize="16"
-                    Text="Install plugins"/>
+                    Text="Обновление плагинов"/>
                 <ProgressBar
                     Margin="10"
                     Height="20"
@@ -40,9 +37,74 @@
 
         </Grid>
         <Grid
-            Margin="0,10,0,0"
-            Grid.Row="1" Grid.ColumnSpan="2"
+            Margin="0,0,0,0"
+            Grid.Row="1"
             >
+            <ScrollViewer
+                Margin="5">
+                <ItemsControl
+                    ItemsSource="{Binding ProgressCollection, UpdateSourceTrigger=PropertyChanged}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Border
+                                    Background="LightGray"
+                                    Padding="2"
+                                    Margin="1"
+                                    BorderThickness="1"
+                                    BorderBrush="DarkGray"
+                                    >
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+                                        <Grid
+                                            Grid.Row="0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="120"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <Border
+                                                    Grid.Column="0"
+                                                    Background="#FFB8B8B8"
+                                                    CornerRadius="4"
+                                                    Padding="1"
+                                                    Margin="5,0"
+                                                    >
+                                                <TextBlock 
+                                                    Background="Transparent"
+                                                    FontWeight="Bold"
+                                                    TextAlignment="Center"
+                                                    Text="{Binding Status}"/>
+                                            </Border>
+                                            <TextBlock 
+                                                Grid.Column="1"
+                                                Margin="5,0"
+                                                Text="{Binding Info}"/>
+                                            <TextBlock 
+                                                Grid.Column="3"
+                                                Margin="5,0"
+                                                Text="{Binding InfoVersion}"/>
+                                        </Grid>
+
+                                        <TextBlock 
+                                            Grid.Row="1"
+                                            Margin="5,0"
+                                            TextTrimming="WordEllipsis"
+                                            ToolTip="{Binding Path}"
+                                            Text="{Binding Path}"/>
+                                    </Grid>
+                                </Border>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            
+            </ScrollViewer>
             <!--<Button
                 Margin="5"
                 HorizontalAlignment="Left"

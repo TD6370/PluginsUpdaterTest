@@ -49,7 +49,8 @@ namespace PluginUpdater.ViewModels
             }
         }
 
-        private string m_warningMessage = "Ожидание данных...";
+        private const string m_waitMessage = "Ожидание данных...";
+        private string m_warningMessage = m_waitMessage;
         public string WarningMessage
         {
             get { return m_warningMessage; }
@@ -57,9 +58,15 @@ namespace PluginUpdater.ViewModels
             {
                 m_warningMessage = value;
                 OnPropertyChanged(nameof(WarningMessage));
+                OnPropertyChanged(nameof(IsFail));
             }
         }
 
+        public bool IsFail
+        {
+            get { return !string.IsNullOrEmpty(WarningMessage) &&
+                    WarningMessage.Equals(m_waitMessage); }
+        }
 
         public ApplicationViewModel()
         {
@@ -161,7 +168,6 @@ namespace PluginUpdater.ViewModels
         private void SwithVisible()
         {
             ApplicationVisibility = ApplicationVisibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
-            //ApplicationVisibility = ApplicationVisibility == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
         }
 
         private void Exit()

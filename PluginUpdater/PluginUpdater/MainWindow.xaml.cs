@@ -1,4 +1,5 @@
 ﻿using PluginUpdater.Engine;
+using PluginUpdater.Models;
 using PluginUpdater.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
+using System.Windows.Media;
 
 namespace PluginUpdater
 {
@@ -67,6 +69,61 @@ namespace PluginUpdater
 
         object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            return true;
+        }
+    }
+
+    public class StatusToColorConverter : IValueConverter
+    {
+        object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            StatusChecked result = (StatusChecked)value;
+            switch (result)
+            {
+                case StatusChecked.None:
+                    return new SolidColorBrush(Colors.Transparent);
+                case StatusChecked.NeedDeleted:
+                    return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFEDE3"));
+                case StatusChecked.NeedUpdated:
+                    return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFEE3"));
+                case StatusChecked.NeedInstall:
+                    return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#EEFFE9"));
+
+                default:
+                    return new SolidColorBrush(Colors.Transparent);
+            }
+        }
+
+        object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            //throw new Exception("The method or operation is not implemented.");
+            return true;
+        }
+    }
+
+    public class StatusToMessageConverter : IValueConverter
+    {
+        object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            StatusChecked result = (StatusChecked)value;
+            switch (result)
+            {
+                case StatusChecked.None:
+                    return null;
+                case StatusChecked.NeedDeleted:
+                    return "удалить";
+                case StatusChecked.NeedUpdated:
+                    return "обновить"; 
+                case StatusChecked.NeedInstall:
+                    return "установить";
+                default:
+                    return null;
+            }
+        }
+
+        object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            //throw new Exception("The method or operation is not implemented.");
             return true;
         }
     }

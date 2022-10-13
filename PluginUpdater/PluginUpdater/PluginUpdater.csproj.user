@@ -12,6 +12,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Page Update="Controls\ControlStyles.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Controls\InstallPlugins.xaml">
       <SubType>Designer</SubType>
     </Page>

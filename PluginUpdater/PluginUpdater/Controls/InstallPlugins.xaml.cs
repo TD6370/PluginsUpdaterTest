@@ -33,7 +33,7 @@ namespace PluginUpdater.Controls
 
         private void LoadedChange(object sender, RoutedEventArgs args)
         {
-            ViewModel.StartInstall(new PluginsInstaller());
+            ViewModel.StartInstall();
         }
     }
 }

@@ -19,7 +19,6 @@ namespace PluginUpdater.ViewModels
         {
             var pluginUsed = Items.FirstOrDefault(p => p.ID.Equals(plugin.ID));
             return pluginUsed == null || pluginUsed.Version < plugin.Version;
-            //return !IsExist(plugin);
         }
 
         public bool IsExist(IPlugin plugin)

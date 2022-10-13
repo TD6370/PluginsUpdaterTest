@@ -5,32 +5,27 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
-using System.Net.Http;
 using System.Net.Mime;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Xml;
 using System.Xml.Serialization;
 
 namespace PluginUpdater.Engine
 {
     class Storage
     {
-      
-        public string PathAppExe => System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
+        public string PathAppExe => Process.GetCurrentProcess().MainModule.FileName;
         public string PathApp => Environment.CurrentDirectory;
         public string PluginConfigFileName => "PluginConfig.xml";
         public string PluginUsedFileName => "PluginUsed.xml";
         public string FolderInstall => "PluginInstall";
         public string LogFileName => "Log.txt";
-        public string PathPluginConfig => string.Concat(PathApp, "\\", PluginConfigFileName);
-        public string PathPluginInstall => string.Concat(PathApp, "\\", FolderInstall);
-        public string PathPluginUsed => string.Concat(PathApp, "\\", PluginUsedFileName);
-        public string PluginApplicationOwnerPathDefault => string.Concat(PathApp, "\\", "TestApp.exe");
-        public string LogPath => string.Concat(PathApp, "\\", LogFileName);
+        public string TestPluginsFileName => "TestPlugins.xml";
+        public string PathPluginConfig => GetNewPath(PluginConfigFileName);
+        public string PathPluginInstall => GetNewPath(FolderInstall);
+        public string PathPluginUsed => GetNewPath(PluginUsedFileName);
+        public string PluginApplicationOwnerPathDefault => GetNewPath("TestApp.exe");
+        public string LogPath => GetNewPath(LogFileName);
         
         private static Storage m_storage;
         public static Storage Instance
@@ -57,7 +52,7 @@ namespace PluginUpdater.Engine
 
         public string GetPlaginTestURL()
         {
-            return GetNewPath("TestPlugins.xml");
+            return GetNewPath(TestPluginsFileName);
         }
 
         public async Task<T> GetWebContentAsync<T>(string url)
@@ -217,27 +212,72 @@ namespace PluginUpdater.Engine
         //    }
         //}
 
-        public void DownloadFile(string url, string path, Action<int> DownloadProgressChanged)
+        //public void DownloadFile(string url, string path, Action<int> DownloadProgressChanged)
+        //{
+        //    try 
+        //    {
+        //        string pathFolder = Path.GetDirectoryName(path);
+        //        if (!Directory.Exists(pathFolder))
+        //            Directory.CreateDirectory(pathFolder);
+
+        //        using (WebClient client = new WebClient())
+        //        {
+        //            client.DownloadProgressChanged += (s,e) =>
+        //            {
+        //                if(DownloadProgressChanged != null)
+        //                    DownloadProgressChanged(e.ProgressPercentage);
+        //            };
+        //            //------------------
+        //            client.OpenRead(url);
+        //            string header_contentDisposition = client.ResponseHeaders["content-disposition"];
+        //            string filename = new ContentDisposition(header_contentDisposition).FileName;
+        //            //------------------
+        //            client.DownloadFile(new Uri(url), path);
+        //            //------------------
+        //            //client.DownloadFileAsync(new Uri(url), path);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Logger.Error(ex, "Error on DownloadFile", $"url={url} path={path}");
+        //        throw;
+        //    }
+        //}
+
+        public void DownloadFile(string url, ref string path, Action<int> DownloadProgressChanged)
         {
-            try 
+            try
             {
-                string pathFolder = Path.GetDirectoryName(path);
+                //FileAttributes attr = File.GetAttributes(path);
+                //bool isDeirectory = (attr & FileAttributes.Directory) == FileAttributes.Directory;
+                //string pathFolder = isDeirectory ? path : Path.GetDirectoryName(path);
+                string pathFolder = path;
+
                 if (!Directory.Exists(pathFolder))
                     Directory.CreateDirectory(pathFolder);
 
                 using (WebClient client = new WebClient())
                 {
-                    client.DownloadProgressChanged += (s,e) =>
+                    client.DownloadProgressChanged += (s, e) =>
                     {
-                        if(DownloadProgressChanged != null)
+                        if (DownloadProgressChanged != null)
                             DownloadProgressChanged(e.ProgressPercentage);
                     };
                     //------------------
-                    //client.OpenRead(url);
-                    //string header_contentDisposition = client.ResponseHeaders["content-disposition"];
-                    //string filename = new ContentDisposition(header_contentDisposition).FileName;
+                    client.OpenRead(url);
+                    string header_contentDisposition = client.ResponseHeaders["content-disposition"];
+                    if(header_contentDisposition == null)
+                    {
+                        Logger.Debug($"Error on DownloadFile: Not found file name by {url} !");
+                        return;
+                    }
+
+                    string filename = new ContentDisposition(header_contentDisposition).FileName;
                     //------------------
+                    path = string.Concat(pathFolder, "\\", filename);
                     client.DownloadFile(new Uri(url), path);
+                    //------------------
+                    //client.DownloadFileAsync(new Uri(url), path);
                 }
             }
             catch (Exception ex)
