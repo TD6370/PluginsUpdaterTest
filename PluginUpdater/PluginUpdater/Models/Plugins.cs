@@ -1,11 +1,6 @@
 ﻿using PluginUpdater.Engine;
 using PluginUpdater.ViewModels;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using System.Threading.Tasks;
-
 
 namespace PluginUpdater.Models
 {

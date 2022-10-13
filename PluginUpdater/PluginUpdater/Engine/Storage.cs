@@ -1,7 +1,6 @@
 ﻿using PluginUpdater.Models;
 using PluginUpdater.ViewModels;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
@@ -90,11 +89,6 @@ namespace PluginUpdater.Engine
 
         public async Task<PluginsConfig> LoadPluginsConfigAsync()
         {
-            //TEST
-            //await Task.Run(() => {
-            //    Thread.Sleep(2000);
-            //});
-
             PluginsConfig config = null;
             try
             {
@@ -186,71 +180,10 @@ namespace PluginUpdater.Engine
             }
         }
 
-        //public async Task DownloadFile(string url, string path)
-        //{
-        //    try 
-        //    {
-        //        string pathFolder = Path.GetDirectoryName(path);
-        //        if (!Directory.Exists(pathFolder))
-        //            Directory.CreateDirectory(pathFolder);
-
-        //        byte[] data;
-
-        //        using (var client = new HttpClient())
-        //        using (HttpResponseMessage response = await client.GetAsync(url))
-        //        using (HttpContent content = response.Content)
-        //        {
-        //            data = await content.ReadAsByteArrayAsync();
-        //            using (FileStream file = File.Create(path))
-        //                file.Write(data, 0, data.Length);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Logger.Error(ex, "Error on DownloadFile", $"url={url} path={path}");
-        //        throw;
-        //    }
-        //}
-
-        //public void DownloadFile(string url, string path, Action<int> DownloadProgressChanged)
-        //{
-        //    try 
-        //    {
-        //        string pathFolder = Path.GetDirectoryName(path);
-        //        if (!Directory.Exists(pathFolder))
-        //            Directory.CreateDirectory(pathFolder);
-
-        //        using (WebClient client = new WebClient())
-        //        {
-        //            client.DownloadProgressChanged += (s,e) =>
-        //            {
-        //                if(DownloadProgressChanged != null)
-        //                    DownloadProgressChanged(e.ProgressPercentage);
-        //            };
-        //            //------------------
-        //            client.OpenRead(url);
-        //            string header_contentDisposition = client.ResponseHeaders["content-disposition"];
-        //            string filename = new ContentDisposition(header_contentDisposition).FileName;
-        //            //------------------
-        //            client.DownloadFile(new Uri(url), path);
-        //            //------------------
-        //            //client.DownloadFileAsync(new Uri(url), path);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Logger.Error(ex, "Error on DownloadFile", $"url={url} path={path}");
-        //        throw;
-        //    }
-        //}
-
         public void DownloadFile(string url, ref string path, Action<int> DownloadProgressChanged)
         {
             try
             {
-                //FileAttributes attr = File.GetAttributes(path);
-                //bool isDeirectory = (attr & FileAttributes.Directory) == FileAttributes.Directory;
-                //string pathFolder = isDeirectory ? path : Path.GetDirectoryName(path);
                 string pathFolder = path;
 
                 if (!Directory.Exists(pathFolder))
@@ -263,7 +196,6 @@ namespace PluginUpdater.Engine
                         if (DownloadProgressChanged != null)
                             DownloadProgressChanged(e.ProgressPercentage);
                     };
-                    //------------------
                     client.OpenRead(url);
                     string header_contentDisposition = client.ResponseHeaders["content-disposition"];
                     if(header_contentDisposition == null)
@@ -271,13 +203,9 @@ namespace PluginUpdater.Engine
                         Logger.Debug($"Error on DownloadFile: Not found file name by {url} !");
                         return;
                     }
-
                     string filename = new ContentDisposition(header_contentDisposition).FileName;
-                    //------------------
                     path = string.Concat(pathFolder, "\\", filename);
                     client.DownloadFile(new Uri(url), path);
-                    //------------------
-                    //client.DownloadFileAsync(new Uri(url), path);
                 }
             }
             catch (Exception ex)

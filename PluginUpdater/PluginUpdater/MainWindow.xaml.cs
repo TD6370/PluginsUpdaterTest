@@ -2,11 +2,7 @@
 using PluginUpdater.Models;
 using PluginUpdater.ViewModels;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
@@ -33,7 +29,6 @@ namespace PluginUpdater
             {
                 m_applicationViewModel = new ApplicationViewModel();
                 DataContext = m_applicationViewModel;
-                //m_applicationViewModel.LoadPlugins();
             }
             catch (Exception ex)
             {
@@ -41,6 +36,21 @@ namespace PluginUpdater
                 MessageBox.Show(ex.Message, "Error on init ppplication", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 }
+    }
+
+    public class BoolInverseConverter : IValueConverter
+    {
+        object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (!(value is bool)) return false;
+
+            return !(bool)value;
+        }
+
+        object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return true;
+        }
     }
 
     public class BoolToVisibilityConverter : IValueConverter
@@ -78,19 +88,19 @@ namespace PluginUpdater
         object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             StatusChecked result = (StatusChecked)value;
+            var defaultColor = new SolidColorBrush(Colors.DarkGray);
             switch (result)
             {
                 case StatusChecked.None:
-                    return new SolidColorBrush(Colors.Transparent);
+                    return defaultColor;
                 case StatusChecked.NeedDeleted:
-                    return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFEDE3"));
+                    return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFEC7A74"));
                 case StatusChecked.NeedUpdated:
-                    return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFEE3"));
+                    return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFECD074"));
                 case StatusChecked.NeedInstall:
-                    return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#EEFFE9"));
-
+                    return new SolidColorBrush(Colors.LightGreen);
                 default:
-                    return new SolidColorBrush(Colors.Transparent);
+                    return defaultColor;
             }
         }
 

@@ -3,11 +3,7 @@ using PluginUpdater.Models;
 using PluginUpdater.Controls;
 using System;
 using System.Windows;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
-using System.Linq;
-using System.Net;
 
 namespace PluginUpdater.ViewModels
 {

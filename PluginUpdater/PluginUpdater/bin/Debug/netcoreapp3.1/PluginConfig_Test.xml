@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<PluginsConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <PluginsURL>https://test.com/plugins</PluginsURL>
-  <PluginsInstallPath>E:\Projects\TESTS\PluginUpdater\PluginUpdater\PluginUpdater\bin\Debug\netcoreapp3.1\PluginInstall</PluginsInstallPath>
-  <PluginApplicationOwnerPath>E:\Projects\TESTS\PluginUpdater\PluginUpdater\PluginUpdater\bin\Debug\netcoreapp3.1\TestApp.exe</PluginApplicationOwnerPath>
-</PluginsConfig>

@@ -18,15 +18,8 @@ namespace PluginUpdater.ViewModels
         public bool IsCompleted { get; private set; }
 
         private ProgressInfoCollection m_progressCollection;
-        //public ProgressInfoCollection ProgressCollection => m_progressCollection;
-        public ProgressInfoCollection ProgressCollection
-        {
-            get
-            {
-                return m_progressCollection;
-            }
-        }
-
+        public ProgressInfoCollection ProgressCollection => m_progressCollection;
+        
         private int m_progressInstallValue;
         public int ProgressInstallValue
         {

@@ -17,12 +17,12 @@
   </Plugin>
   <Plugin>
     <ID>4</ID>
-    <Version>1</Version>
+    <Version>2</Version>
     <DownloadLink>https://drive.google.com/uc?export=download&amp;id=15bQbgQEodC0Cro4y1CTWhbVdLX2V_qZ-</DownloadLink>
   </Plugin>
   <Plugin>
     <ID>5</ID>
-    <Version>1</Version>
+    <Version>12</Version>
     <DownloadLink>https://drive.google.com/uc?export=download&amp;id=1QXYtJr9OLC4ysYRZZBvKnf8ZK5ngA8ym</DownloadLink>
   </Plugin>
 </ArrayOfPlugin>

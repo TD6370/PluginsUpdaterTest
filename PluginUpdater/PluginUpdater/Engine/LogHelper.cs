@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Windows;
-using System.Threading;
-using System.Globalization;
-
 namespace PluginUpdater.Engine
 {
     public class FileLogger

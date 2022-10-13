@@ -12,21 +12,20 @@
         Width="510"
         MinWidth="510"
         SizeToContent="Height"
+        Background="Gray"
         Visibility="{Binding ApplicationVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
         >
-    <!--SizeToContent="WidthAndHeight"-->
-    <!--Visibility="{Binding ApplicationVisibility, Converter={StaticResource boolToVisibilityConverter}}"-->
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/PluginUpdater;component/Controls/ControlStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-
             <local:BoolToVisibilityConverter x:Key="boolToVisibilityConverter" />
             <local:InverseBoolToVisibilityConverter x:Key="inverseBoolToVisibilityConverter" />
             <local:StatusToColorConverter x:Key="statusToColorConverter" />
             <local:StatusToMessageConverter x:Key="statusToMessageConverter" />
+            <local:BoolInverseConverter x:Key="boolInverseConverter" />
             
         </ResourceDictionary>
     </Window.Resources>
@@ -36,87 +35,103 @@
             <RowDefinition Height="Auto" 
                            MinHeight="40"/>
         </Grid.RowDefinitions>
-        <TextBlock Text="{Binding WarningMessage}"
-                   HorizontalAlignment="Stretch"
-                   TextWrapping="Wrap"
-                   Margin="10"
-                   Visibility="{Binding IsProgress, Converter={StaticResource boolToVisibilityConverter}}">
-            <TextBlock.Style>
-                <Style TargetType="TextBlock">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding IsFail}">
-                            <Setter Property="Foreground" Value="Red"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </TextBlock.Style>
-        </TextBlock>
-        <ListView 
-                Grid.Row="0"
-                Margin="5"
-                ItemsSource="{Binding Plugins}"
-                Visibility="{Binding IsProgress, Converter={StaticResource inverseBoolToVisibilityConverter}}">
-            <ListView.ItemContainerStyle>
-                <Style TargetType="{x:Type ListViewItem}"  >
-                    <Setter Property="Margin" Value="0"/>
-                    <Setter Property="Padding"  Value="0"/>
-                    <Setter Property="Background"
-                                        Value="{Binding Status, Converter={StaticResource statusToColorConverter}, ConverterParameter='Background'}"/>
-
-                </Style>
-            </ListView.ItemContainerStyle>
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn DisplayMemberBinding="{Binding Path=ID}" 
-                                    Header="ID" 
-                                    Width="Auto"/>
-                    
-                    <GridViewColumn Header="Версия"  
-                                    DisplayMemberBinding="{Binding Path=Version}"
+        <ScrollViewer
+             VerticalScrollBarVisibility="Auto"
+            HorizontalScrollBarVisibility="Disabled" 
+            >
+            <TextBlock Text="{Binding WarningMessage}"
+                       HorizontalAlignment="Stretch"
+                       TextWrapping="Wrap"
+                       Margin="10"
+                       Visibility="{Binding IsProgress, Converter={StaticResource boolToVisibilityConverter}}">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsFail}">
+                                <Setter Property="Foreground" Value="Red"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </ScrollViewer>
+        <ScrollViewer
+            VerticalScrollBarVisibility="Auto"
+            HorizontalScrollBarVisibility="Disabled"            >
+        
+            <ItemsControl 
+                    Grid.Row="0"
+                    Margin="5"
+                    ItemsSource="{Binding Plugins}"
+                    Visibility="{Binding IsProgress, Converter={StaticResource inverseBoolToVisibilityConverter}}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid
+                                Margin="2"
+                                Background="{Binding Status, Converter={StaticResource statusToColorConverter}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid
+                                    Grid.Column="0"
                                     Width="Auto">
-                        <GridViewColumn.CellTemplate>
-                            
-                            <DataTemplate>
-                                <Grid>
-                                    <Border
-                                        MinWidth="100"
-                                        Padding="3"
-                                        Margin="3"
-                                        BorderThickness="1"
-                                        Background="Gray"
-                                        CornerRadius="2"
-                                        >
+                                <CheckBox 
+                                    Width="20"
+                                            
+                                    Margin="5"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    IsChecked="{Binding Checked}"/>
+                            </Grid>
+                            <Grid
+                                    Grid.Column="1">
+                                <Grid
+                                    Grid.Row="0">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Orientation="Horizontal"
+                                                    VerticalAlignment="Center">
+                                            <TextBlock 
+                                                Margin="5,0"
+                                                FontWeight="Bold"
+                                                Text="ID:"/>
+                                            <TextBlock 
+                                                Grid.Column="0"
+                                                Margin="5,0"
+                                                Text="{Binding Path=ID}" />
+                                                    
+                                            <TextBlock
+                                                FontWeight="Bold"
+                                                TextAlignment="Center"
+                                                Margin="5,0"
+                                                Text="Весрия:"/>
+                                            <TextBlock
+                                                        
+                                                TextAlignment="Center"
+                                                Text="{Binding Version}"/>
+                                        </StackPanel>
                                         <TextBlock
-                                            TextAlignment="Center"
-                                            Text="{Binding Version}"
-                                            />
-                                    </Border>
+                                            Grid.Column="2"
+                                            Margin="5,5,10,5"
+                                            FontWeight="Bold"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding Status, Converter={StaticResource statusToMessageConverter}}"/>
+                                    </Grid>
                                 </Grid>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    
+                                       
+                            </Grid>
+                        </Grid>
+                          
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
 
-                    <GridViewColumn Header="     " >
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <CheckBox IsChecked="{Binding Checked}"/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-
-                    <GridViewColumn Header="Статус" Width="100" >
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Status, Converter={StaticResource statusToMessageConverter}}"/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-
-
-                </GridView>
-            </ListView.View>
-        </ListView>
+            </ItemsControl>
+        </ScrollViewer>
         <Grid
             Grid.Row="1">
             <Button
@@ -127,7 +142,8 @@
                 Height="30"
                 Style="{StaticResource ButtonLightStyle}"
                 Content="Продолжить"
-                Command="{Binding ApplayCommand}" Background="#FFFFFEE3"
+                IsEnabled="{Binding IsProgress, Converter={StaticResource boolInverseConverter}}"
+                Command="{Binding ApplayCommand}" Background="#FFEC7A74"
                 />
         </Grid>
     </Grid>

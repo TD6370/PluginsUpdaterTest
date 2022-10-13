@@ -23,11 +23,6 @@ namespace PluginUpdater.Models
                 sb.Append("В настройках не указан путь(URL) к плагинам!");
                 sb.AppendLine();
             }
-            //if (!Uri.IsWellFormedUriString(PluginsURL, UriKind.RelativeOrAbsolute))
-            //{
-            //    sb.Append("В настройках путь(URL) к плагинам указан не верно!");
-            //    sb.AppendLine();
-            //}
             if (string.IsNullOrEmpty(PluginsInstallPath))
             {
                 sb.Append("В настройках не указан путь к локальной директории, где хранятся установленные плагины!");
