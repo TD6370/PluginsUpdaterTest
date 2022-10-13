@@ -97,12 +97,16 @@
                                         <StackPanel Orientation="Horizontal"
                                                     VerticalAlignment="Center">
                                             <TextBlock 
+                                                
                                                 Margin="5,0"
                                                 FontWeight="Bold"
                                                 Text="ID:"/>
                                             <TextBlock 
                                                 Grid.Column="0"
+                                                Width="100"
                                                 Margin="5,0"
+                                                TextTrimming="CharacterEllipsis"
+                                                ToolTip="{Binding ID}"
                                                 Text="{Binding Path=ID}" />
                                                     
                                             <TextBlock

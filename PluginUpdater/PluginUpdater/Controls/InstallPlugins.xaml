@@ -48,12 +48,25 @@
                         <DataTemplate>
                             <Grid>
                                 <Border
-                                    Background="LightGray"
+                                    
                                     Padding="2"
                                     Margin="1"
                                     BorderThickness="1"
                                     BorderBrush="DarkGray"
                                     >
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsComleted}" Value="True">
+                                                    <Setter Property="Background" Value="LightGray"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding IsComleted}" Value="False">
+                                                    <Setter Property="Background" Value="LightYellow"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                    
                                     <Grid>
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto" />
@@ -70,11 +83,22 @@
 
                                             <Border
                                                     Grid.Column="0"
-                                                    Background="#FFB8B8B8"
-                                                    CornerRadius="4"
+                                                    CornerRadius="0"
                                                     Padding="1"
                                                     Margin="5,0"
                                                     >
+                                                <Border.Style>
+                                                    <Style TargetType="Border">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IsComleted}" Value="True">
+                                                                <Setter Property="Background" Value="#FFB8B8B8"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding IsComleted}" Value="False">
+                                                                <Setter Property="Background" Value="Yellow"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Border.Style>
                                                 <TextBlock 
                                                     Background="Transparent"
                                                     FontWeight="Bold"
@@ -84,6 +108,8 @@
                                             <TextBlock 
                                                 Grid.Column="1"
                                                 Margin="5,0"
+                                                MaxWidth="200"
+                                                TextTrimming="CharacterEllipsis"
                                                 Text="{Binding Info}"/>
                                             <TextBlock 
                                                 Grid.Column="3"

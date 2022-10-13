@@ -49,12 +49,8 @@ namespace PluginUpdater.ViewModels
 
         private void UpdateByChecked(IPlugin pluginChecked)
         {
-            if (m_pluginsUsed == null)
-                return;
-
             pluginChecked.Status = StatusChecked.None;
-
-            var item = m_pluginsUsed.FirstOrDefault(p => p.ID.Equals(pluginChecked.ID));
+            var item = m_pluginsUsed?.FirstOrDefault(p => p.ID.Equals(pluginChecked.ID));
             if (item != null)
             {
                 if (!pluginChecked.Checked)
