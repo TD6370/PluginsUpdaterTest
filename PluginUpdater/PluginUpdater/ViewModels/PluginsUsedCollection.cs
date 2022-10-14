@@ -14,19 +14,19 @@ namespace PluginUpdater.ViewModels
         {
         }
 
-        public bool IsNew(IPlugin plugin)
+        public bool IsNew(PluginViewModel plugin)
         {
             var pluginUsed = Items.FirstOrDefault(p => p.ID.Equals(plugin.ID));
             return pluginUsed == null || pluginUsed.Version < plugin.Version;
         }
 
-        public bool IsExist(IPlugin plugin)
+        public bool IsExist(PluginViewModel plugin)
         {
             var pluginUsed = Items.FirstOrDefault(p => p.ID.Equals(plugin.ID) && p.Version.Equals(plugin.Version));
             return pluginUsed != null;
         }
 
-        public void AddPlugin(IPlugin plugin)
+        public void AddPlugin(PluginViewModel plugin)
         {
             Items.Add(new PluginsUsed()
             {
@@ -35,7 +35,7 @@ namespace PluginUpdater.ViewModels
             });
         }
 
-        public void UpdateByCheckedChange(IEnumerable<IPlugin> plugins)
+        public void UpdateByCheckedChange(IEnumerable<PluginViewModel> plugins)
         {
             Items.Clear();
             plugins.Where(p=>p.Checked).ToList().ForEach(p => AddPlugin(p));

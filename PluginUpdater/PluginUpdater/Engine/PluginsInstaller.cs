@@ -1,4 +1,5 @@
 ﻿using PluginUpdater.Models;
+using PluginUpdater.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -10,8 +11,8 @@ namespace PluginUpdater.Engine
     {
         public string InstallPath { get; set; }
 
-        public Action<ProgressInfo> ProgressAction { get; set; }
-
+        public Action<IProgressInfo> ProgressAction { get; set; }
+        
         public Task InstallPluginsAsync(IEnumerable<IPlugin> plugins);
 
         public Task DeletePluginsAsync(IEnumerable<IPlugin> plugins);
@@ -21,7 +22,7 @@ namespace PluginUpdater.Engine
     {
         public string InstallPath { get; set; }
 
-        public Action<ProgressInfo> ProgressAction { get; set; }
+        public Action<IProgressInfo> ProgressAction { get; set; }
 
         private int m_progressInstallValue;
 
@@ -30,33 +31,35 @@ namespace PluginUpdater.Engine
             await Task.Run(() =>
             {
                 foreach (var plugin in plugins)
-                {
+                { 
+                    var pluginVM = new PluginViewModel(plugin);
+
                     string pathInstall = string.Concat(InstallPath, $"\\{plugin.ID}");
                     bool isExist = Storage.Instance.CheckDirectory(pathInstall);
                     if (isExist)
                     {
-                        plugin.Delete(pathInstall);
+                        pluginVM.Delete(pathInstall);
                     }
 
-                    ProgressInfo.TypeAction typeAction = plugin.Status == StatusChecked.NeedUpdated ? ProgressInfo.TypeAction.Update : ProgressInfo.TypeAction.Install;
+                    var typeAction = pluginVM.Status == StatusChecked.NeedUpdated ? TypeAction.Update : TypeAction.Install;
 
                     if (ProgressAction != null)
-                        ProgressAction(new ProgressInfo(plugin, m_progressInstallValue, typeAction));
+                        ProgressAction(new ProgressInfo(pluginVM, m_progressInstallValue, typeAction));
 
-                    plugin.DownloadProgressChanged = DownloadProgressChanged;
+                    pluginVM.DownloadProgressChanged = DownloadProgressChanged;
 
-                    //TEST
+# if DEBUG
                     Thread.Sleep(500);
-                    //----------------------
-                    plugin.Install(pathInstall);
+#endif
+                    pluginVM.Install(pathInstall);
 
                     m_progressInstallValue++;
                     if (ProgressAction != null)
-                        ProgressAction(new ProgressInfo(plugin, m_progressInstallValue, typeAction, true));
+                        ProgressAction(new ProgressInfo(pluginVM, m_progressInstallValue, typeAction, true));
                 }
-
-                //TEST
+#if DEBUG
                 Thread.Sleep(500);
+#endif
             });
         }
 
@@ -68,25 +71,28 @@ namespace PluginUpdater.Engine
 
                 foreach (var plugin in plugins)
                 {
+                    var pluginVM = new PluginViewModel(plugin);
+
                     if (ProgressAction != null)
-                        ProgressAction(new ProgressInfo(plugin, m_progressInstallValue, ProgressInfo.TypeAction.Delete));
+                        ProgressAction(new ProgressInfo(pluginVM, m_progressInstallValue, TypeAction.Delete));
 
                     string pathInstall = string.Concat(InstallPath, $"\\{plugin.ID}");
                     bool isExist = Storage.Instance.CheckDirectory(pathInstall);
                     if (isExist)
                     {
                         if (ProgressAction != null)
-                            ProgressAction(new ProgressInfo(plugin, m_progressInstallValue, ProgressInfo.TypeAction.Delete));
+                            ProgressAction(new ProgressInfo(pluginVM, m_progressInstallValue, TypeAction.Delete));
 
-                        plugin.Delete(pathInstall);
+                        pluginVM.Delete(pathInstall);
                     }
 
                     m_progressInstallValue++;
                     if (ProgressAction != null)
-                        ProgressAction(new ProgressInfo(plugin, m_progressInstallValue, ProgressInfo.TypeAction.Delete, true));
-
+                        ProgressAction(new ProgressInfo(pluginVM, m_progressInstallValue, TypeAction.Delete, true));
+# if DEBUG
                     //TEST
                     Thread.Sleep(500);
+#endif
                 }
             });
         }

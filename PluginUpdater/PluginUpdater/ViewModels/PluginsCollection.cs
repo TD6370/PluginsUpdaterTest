@@ -8,8 +8,7 @@ using System.Text;
 
 namespace PluginUpdater.ViewModels
 {
-    
-    public class PluginsCollection : ObservableCollection<IPlugin>, INotifyCollectionChanged
+    public class PluginsCollection : ObservableCollection<PluginViewModel>, INotifyCollectionChanged
     {
         private List<PluginsUsed> m_pluginsUsed;
 
@@ -18,24 +17,14 @@ namespace PluginUpdater.ViewModels
 
         }
 
-        public void CreatePluginsCollection<T>(List<T> plugins)
-        {
-            foreach (T item in plugins)
-            {
-                IPlugin plugin = item as IPlugin;
-                plugin.CheckedChanged = p => { UpdateByChecked(p); };
-                Items.Add(plugin);
-            }
-        }
-
         public static PluginsCollection Create<T>(List<T> plugins)
         {
             PluginsCollection collection = new PluginsCollection();
-            foreach (T item in plugins)
+            foreach (T plugin in plugins)
             {
-                IPlugin plugin = item as IPlugin;
-                plugin.CheckedChanged = p => { collection.UpdateByChecked(p); };
-                collection.Add(plugin);
+                PluginViewModel pluginVM = new PluginViewModel(plugin as IPlugin);
+                pluginVM.CheckedChanged = p => { collection.UpdateByChecked(pluginVM); };
+                collection.Add(pluginVM);
             }
             return collection;
         }
@@ -47,26 +36,26 @@ namespace PluginUpdater.ViewModels
                 item.Checked = true;
         }
 
-        private void UpdateByChecked(IPlugin pluginChecked)
+        private void UpdateByChecked(PluginViewModel pluginVM)
         {
-            pluginChecked.Status = StatusChecked.None;
-            var item = m_pluginsUsed?.FirstOrDefault(p => p.ID.Equals(pluginChecked.ID));
+            pluginVM.Status = StatusChecked.None;
+            var item = m_pluginsUsed?.FirstOrDefault(p => p.ID.Equals(pluginVM.ID));
             if (item != null)
             {
-                if (!pluginChecked.Checked)
+                if (!pluginVM.Checked)
                 {
-                    pluginChecked.Status = StatusChecked.NeedDeleted;
+                    pluginVM.Status = StatusChecked.NeedDeleted;
                 }
-                else if (item.Version < pluginChecked.Version)
+                else if (item.Version < pluginVM.Version)
                 {
-                    pluginChecked.Status = StatusChecked.NeedUpdated;
+                    pluginVM.Status = StatusChecked.NeedUpdated;
                 }
             }
-            else if (pluginChecked.Checked)
+            else if (pluginVM.Checked)
             {
-                pluginChecked.Status = StatusChecked.NeedInstall;
+                pluginVM.Status = StatusChecked.NeedInstall;
             }
-            pluginChecked.UpdateView();
+            pluginVM.UpdateView();
         }
 
         public void UpdateByUsing(PluginsUsedCollection pluginsUsed)

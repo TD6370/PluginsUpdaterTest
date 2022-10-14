@@ -7,9 +7,9 @@ using System.Text;
 
 namespace PluginUpdater.ViewModels
 {
-    public class ProgressInfoCollection : ObservableCollection<ProgressInfo>, INotifyCollectionChanged
+    public class ProgressInfoCollection : ObservableCollection<IProgressInfo>, INotifyCollectionChanged
     {
-        public void Update(ProgressInfo progressInfo)
+        public void Update(IProgressInfo progressInfo)
         {
             var progressItem = Items.FirstOrDefault(p => p.Plagin.ID.Equals(progressInfo.Plagin.ID));
             if (progressItem == null)

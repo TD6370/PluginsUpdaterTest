@@ -4,6 +4,7 @@ using PluginUpdater.ViewModels;
 using System;
 using System.Globalization;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 
@@ -36,6 +37,13 @@ namespace PluginUpdater
                 MessageBox.Show(ex.Message, "Error on init ppplication", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 }
+
+        private void Grid_PreviewMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            var fe = sender as FrameworkElement;
+            var pluginVM = fe.DataContext as PluginViewModel;
+            pluginVM.Checked = !pluginVM.Checked;
+        }
     }
 
     public class BoolInverseConverter : IValueConverter

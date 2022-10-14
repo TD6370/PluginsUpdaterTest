@@ -67,6 +67,8 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Grid
+                                Cursor="Hand"
+                                PreviewMouseDown="Grid_PreviewMouseDown"
                                 Margin="2"
                                 Background="{Binding Status, Converter={StaticResource statusToColorConverter}}">
                             <Grid.ColumnDefinitions>
@@ -78,7 +80,7 @@
                                     Width="Auto">
                                 <CheckBox 
                                     Width="20"
-                                            
+                                    IsEnabled="False"        
                                     Margin="5"
                                     VerticalAlignment="Center"
                                     HorizontalAlignment="Center"

@@ -180,7 +180,7 @@ namespace PluginUpdater.Engine
             }
         }
 
-        public void DownloadFile(string url, ref string path, Action<int> DownloadProgressChanged)
+        public string DownloadFile(string url, ref string path, Action<int> DownloadProgressChanged)
         {
             try
             {
@@ -200,18 +200,20 @@ namespace PluginUpdater.Engine
                     string header_contentDisposition = client.ResponseHeaders["content-disposition"];
                     if(header_contentDisposition == null)
                     {
-                        Logger.Debug($"Error on DownloadFile: Not found file name by {url} !");
-                        return;
+                        string error = $"Error on DownloadFile: Not found file name by {url} !";
+                        Logger.Debug(error);
+                        return error;
                     }
                     string filename = new ContentDisposition(header_contentDisposition).FileName;
                     path = string.Concat(pathFolder, "\\", filename);
                     client.DownloadFile(new Uri(url), path);
                 }
+                return string.Empty;
             }
             catch (Exception ex)
             {
                 Logger.Error(ex, "Error on DownloadFile", $"url={url} path={path}");
-                throw;
+                return "Error on Download File:\nUrl={url}\nPath={path}\n{ex.Message}";
             }
         }
 

@@ -5,15 +5,31 @@ using System.Text;
 
 namespace PluginUpdater.Models
 {
-    public class ProgressInfo : BaseNotifyPropertyChanged
-    {
-        public enum TypeAction { Install, Delete, Update }
+    public enum TypeAction { Install, Delete, Update }
 
-        private IPlugin m_plagin;
+    public interface IProgressInfo
+    {
+        public IPlugin Plagin { get; }
+        public int Value { get; }
+
+        public bool IsComleted { get; set; }
+        public string Info { get; }
+        
+        public string InfoVersion { get; }
+        public string Status { get; }
+        public string Path { get; }
+
+        public void Copy(IProgressInfo other);
+        public TypeAction ActionType { get; }
+    }
+
+    public class ProgressInfo : BaseNotifyPropertyChanged, IProgressInfo
+    {
+        private PluginViewModel m_plagin;
         private int m_value;
         private TypeAction m_typeAction;
 
-        public IPlugin Plagin => m_plagin;
+        public IPlugin Plagin => m_plagin.Plugin;
         public int Value => m_value;
         public TypeAction ActionType => m_typeAction;
 
@@ -31,7 +47,7 @@ namespace PluginUpdater.Models
         public string Info {
             get
             {
-                string title = $"{ m_plagin.ID }";
+                string title = m_plagin.ID;
                 switch (m_typeAction)
                 {
                     case TypeAction.Delete:
@@ -50,7 +66,7 @@ namespace PluginUpdater.Models
         public string Status => IsComleted ? "Завершено" : "Выполняется...";
         public string Path => m_plagin.Path;
 
-        public ProgressInfo(IPlugin plagin, int value, TypeAction typeAction, bool isCompleted = false)
+        public ProgressInfo(PluginViewModel plagin, int value, TypeAction typeAction, bool isCompleted = false)
         {
             m_plagin = plagin;
             m_value = value;
@@ -58,10 +74,10 @@ namespace PluginUpdater.Models
             m_isComleted = isCompleted;
         }
 
-        public void Copy(ProgressInfo other)
+        public void Copy(IProgressInfo other)
         {
             m_value = other.Value;
-            m_typeAction = other.m_typeAction;
+            m_typeAction = other.ActionType;
             IsComleted = other.IsComleted;
         }
     }

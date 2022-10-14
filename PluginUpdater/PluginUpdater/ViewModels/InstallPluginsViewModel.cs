@@ -71,9 +71,6 @@ namespace PluginUpdater.ViewModels
                 await pluginsInstaller.DeletePluginsAsync(pluginsNeedDelete);
                 await pluginsInstaller.InstallPluginsAsync(pluginsNeedInstall);
 
-                //TEST
-                //return;
-
                 IsCompleted = true;
             }
             catch (Exception ex)
@@ -84,8 +81,9 @@ namespace PluginUpdater.ViewModels
             Close();
         }
 
-        private void ProgressChange(ProgressInfo progressInfo)
+        private void ProgressChange(IProgressInfo _progressInfo)
         {
+            ProgressInfo progressInfo = _progressInfo as ProgressInfo;
             WpfHelper.InvokeMethod(() =>
             {
                 m_progressCollection.Update(progressInfo);
@@ -101,12 +99,14 @@ namespace PluginUpdater.ViewModels
 
         public IEnumerable<IPlugin> FilterNewPlugins()
         {
-            return m_plugins.Where(p => p.Checked && m_pluginsUsed.IsNew(p));
+            //return m_plugins.Where(p => p.Checked && m_pluginsUsed.IsNew(p));
+            return m_plugins.Where(p => p.Checked && m_pluginsUsed.IsNew(p)).Select( p=> p.Plugin);
         }
 
         public IEnumerable<IPlugin> FilterRemovePlugins()
         {
-            return m_plugins.Where(p => !p.Checked && m_pluginsUsed.IsExist(p));
+            //return m_plugins.Where(p => !p.Checked && m_pluginsUsed.IsExist(p));
+            return m_plugins.Where(p => !p.Checked && m_pluginsUsed.IsExist(p)).Select(p => p.Plugin);
         }
         
         private void Close()
