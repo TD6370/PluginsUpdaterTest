@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NETCOREAPP;NETCOREAPP3_1;
 E:\Projects\TESTS\GitPluginUpdater\PluginUpdater\PluginUpdater\App.xaml
-3792404071
+31278213134
 
-231388874261
+231700597697
 192-1533232326
-Controls\ControlStyles.xaml;Controls\InstallPlugins.xaml;MainWindow.xaml;
+Controls\ControlStyles.xaml;Controls\InstallPluginsDialog.xaml;MainWindow.xaml;
 
 False
 

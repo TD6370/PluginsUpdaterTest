@@ -63,5 +63,12 @@ namespace PluginUpdater.ViewModels
             m_pluginsUsed = pluginsUsed.ToList();
             pluginsUsed.ToList().ForEach(p => CheckedWhenExist(p));
         }
+
+        public void Completed(IPlugin plugin)
+        {
+            var pluginVM = Items.FirstOrDefault(p => p.ID.Equals(plugin.ID));
+            if (pluginVM != null)
+                UpdateByChecked(pluginVM);
+        }
     }
 }

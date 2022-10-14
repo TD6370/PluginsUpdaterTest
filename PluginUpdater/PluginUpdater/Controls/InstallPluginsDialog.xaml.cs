@@ -2,6 +2,7 @@
 using PluginUpdater.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,13 +18,14 @@ namespace PluginUpdater.Controls
     /// <summary>
     /// Interaction logic for InstallPlugins.xaml
     /// </summary>
-    public partial class InstallPlugins : Window
+    public partial class InstallPluginsDialog : Window
     {
-        public InstallPlugins()
+        public InstallPluginsDialog()
         {
             InitializeComponent();
 
             Loaded += LoadedChange;
+            Closing += ClosingChange;
         }
 
         private InstallPluginsViewModel ViewModel
@@ -34,6 +36,11 @@ namespace PluginUpdater.Controls
         private void LoadedChange(object sender, RoutedEventArgs args)
         {
             ViewModel.StartInstall();
+        }
+
+        private void ClosingChange(object sender, CancelEventArgs args)
+        {
+            ViewModel.Closing(args);
         }
     }
 }

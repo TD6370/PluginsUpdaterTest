@@ -9,11 +9,13 @@ namespace PluginUpdater.ViewModels
     
     public class PluginViewModel : BaseNotifyPropertyChanged
     {
+        private string m_path;
+
         private IPlugin m_plagin;
         public IPlugin Plugin => m_plagin;
-
-        private string m_path;
+        
         private string m_errorMessage;
+        public string ErrorMessage => m_errorMessage;
 
         public virtual string ID 
         {
@@ -72,17 +74,25 @@ namespace PluginUpdater.ViewModels
 
         public bool IsNeedDeleted { get; set; }
 
-        public void Install(string path)
+        public string Install(string path)
         {
             m_path = path;
             var result = Storage.Instance.DownloadFile(DownloadLink, ref m_path, DownloadProgressChanged);
-            m_errorMessage = result;
+            return m_errorMessage = result;
         }
 
-        public void Delete(string path)
+        public string Delete(string path)
         {
-            m_path = path;
-            Storage.Instance.DeleteDerictory(path);
+            try
+            {
+                m_path = path;
+                Storage.Instance.DeleteDerictory(path);
+            }catch(Exception ex)
+            {
+                Logger.Error(ex, "Error on Delete", $"path={path}");
+                return $"Error on Delete File:\nPath={path}\n{ex.Message}";
+            }
+            return string.Empty;
         }
 
         public string GetNameFile()

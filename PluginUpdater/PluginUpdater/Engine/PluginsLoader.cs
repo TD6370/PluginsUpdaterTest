@@ -57,7 +57,10 @@ namespace PluginUpdater.Engine
 
         private async Task<List<Plugin>> LoadWebAsync()
         {
-            List<Plugin> plugins = await Storage.Instance.GetWebContentAsync<List<Plugin>>(URL);
+            List<Plugin> plugins = await Task.Run(() =>
+            {
+                return Storage.Instance.GetWebContentAsync<List<Plugin>>(URL);
+            });
             return plugins;
         }
     }

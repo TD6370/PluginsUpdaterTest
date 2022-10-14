@@ -22,25 +22,30 @@ namespace PluginUpdater.Models
             {
                 sb.Append("В настройках не указан путь(URL) к плагинам!");
                 sb.AppendLine();
+                sb.AppendLine();
             }
             if (string.IsNullOrEmpty(PluginsInstallPath))
             {
                 sb.Append("В настройках не указан путь к локальной директории, где хранятся установленные плагины!");
+                sb.AppendLine();
                 sb.AppendLine();
             }
             if (!Directory.Exists(PluginsInstallPath))
             {
                 sb.Append("В настройках путь к локальной директории, где хранятся установленные плагины указан не верно!");
                 sb.AppendLine();
+                sb.AppendLine();
             }
             if (string.IsNullOrEmpty(PluginApplicationOwnerPath))
             {
                 sb.Append("В настройках не указан путь к путь к программе для плагинов!");
                 sb.AppendLine();
+                sb.AppendLine();
             }
             if (!File.Exists(PluginApplicationOwnerPath))
             {
                 sb.Append("В настройках путь к программе для плагинов указан не верно!");
+                sb.AppendLine();
                 sb.AppendLine();
             }
             return sb.ToString();

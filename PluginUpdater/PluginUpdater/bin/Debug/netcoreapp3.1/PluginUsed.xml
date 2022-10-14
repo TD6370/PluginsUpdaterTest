@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ArrayOfPluginsUsed xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <PluginsUsed>
+    <ID>sldahasljdhwoqeoquwoeuqou12o3</ID>
+    <Version>3</Version>
+  </PluginsUsed>
+  <PluginsUsed>
+    <ID>23402374o324l234hjljwlfjds</ID>
+    <Version>4</Version>
+  </PluginsUsed>
+  <PluginsUsed>
+    <ID>2304923842h34jlk23h4o24230</ID>
+    <Version>41</Version>
+  </PluginsUsed>
+  <PluginsUsed>
     <ID>34092834234jk2nsdanfldf</ID>
-    <Version>2</Version>
+    <Version>22</Version>
   </PluginsUsed>
   <PluginsUsed>
     <ID>3249g2348324j324jl23j4klj</ID>
-    <Version>2</Version>
+    <Version>21</Version>
   </PluginsUsed>
 </ArrayOfPluginsUsed>

@@ -119,6 +119,55 @@ namespace PluginUpdater
         }
     }
 
+    public class StatusResultToColorConverter : IValueConverter
+    {
+        object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            //-- title
+            // <DataTrigger Binding="{Binding IsComleted}" Value="True">
+            //    <Setter Property="Background" Value="LightGray"/>
+            //</DataTrigger>
+            //<DataTrigger Binding="{Binding IsComleted}" Value="False">
+            //    <Setter Property="Background" Value="LightYellow"/>
+            //</DataTrigger>
+            //-- control
+            // <DataTrigger Binding="{Binding IsComleted}" Value="True">
+            //    <Setter Property="Background" Value="#FFB8B8B8"/>
+            //</DataTrigger>
+            //<DataTrigger Binding="{Binding IsComleted}" Value="False">
+            //    <Setter Property="Background" Value="Yellow"/>
+            //</DataTrigger>
+            var par = parameter as string;
+            bool isTitle = !string.IsNullOrEmpty(par) && par == "Title";
+
+            TypeResult result = (TypeResult)value;
+            var defaultColor = isTitle ? new SolidColorBrush(Colors.LightYellow): 
+                new SolidColorBrush(Colors.Yellow);
+            switch (result)
+            {
+                case TypeResult.None:
+                    return defaultColor;
+                case TypeResult.Cancel:
+                    return isTitle ? new SolidColorBrush(Colors.LightSkyBlue) :
+                                    new SolidColorBrush(Colors.LightBlue);
+                case TypeResult.Comleted:
+                    return isTitle ? new SolidColorBrush(Colors.LightGray) :
+                                    new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFB8B8B8"));
+                case TypeResult.Fail:
+                    return isTitle ? new SolidColorBrush(Colors.OrangeRed) :
+                                    new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFEC7A74"));
+                default:
+                    return defaultColor;
+            }
+        }
+
+        object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            //throw new Exception("The method or operation is not implemented.");
+            return true;
+        }
+    }
+
     public class StatusToMessageConverter : IValueConverter
     {
         object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)

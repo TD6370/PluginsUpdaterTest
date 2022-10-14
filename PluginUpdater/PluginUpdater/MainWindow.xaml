@@ -41,14 +41,25 @@
             >
             <TextBlock Text="{Binding WarningMessage}"
                        HorizontalAlignment="Stretch"
+                       Padding="5"
+                       
                        TextWrapping="Wrap"
                        Margin="10"
                        Visibility="{Binding IsProgress, Converter={StaticResource boolToVisibilityConverter}}">
                 <TextBlock.Style>
                     <Style TargetType="TextBlock">
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsFail}">
-                                <Setter Property="Foreground" Value="Red"/>
+                            <DataTrigger Binding="{Binding IsFail}" Value="True">
+                                <Setter Property="FontWeight"  Value="Bold"/>
+                                <Setter Property="FontSize"  Value="12"/>
+                                <Setter Property="Background" Value="LightYellow"/>
+                                <Setter Property="Foreground" Value="OrangeRed"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding IsFail}" Value="False">
+                                <Setter Property="FontWeight"  Value="Medium"/>
+                                <Setter Property="FontSize"  Value="16"/>
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="Background" Value="Transparent"/>
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
@@ -149,7 +160,7 @@
                 Style="{StaticResource ButtonLightStyle}"
                 Content="Продолжить"
                 IsEnabled="{Binding IsProgress, Converter={StaticResource boolInverseConverter}}"
-                Command="{Binding ApplayCommand}" Background="#FFEC7A74"
+                Command="{Binding ApplayCommand}" Background="LightSkyBlue"
                 />
         </Grid>
     </Grid>

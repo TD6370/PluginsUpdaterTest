@@ -2,6 +2,7 @@
 using PluginUpdater.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,12 +12,22 @@ namespace PluginUpdater.ViewModels
 {
     public class InstallPluginsViewModel : BaseNotifyPropertyChanged
     {
+        private IPluginsInstaller m_pluginsInstaller;
         private PluginsCollection m_plugins;
         private PluginsUsedCollection m_pluginsUsed;
         private string m_installPath;
         public Action CloseAction { private get; set; }
-        public bool IsCompleted { get; private set; }
 
+        private bool m_isCompleted;
+        public bool IsCompleted
+        {
+            get { return m_isCompleted; }
+            set
+            {
+                m_isCompleted = value;
+                OnPropertyChanged(nameof(IsCompleted));
+            }
+        }
         private ProgressInfoCollection m_progressCollection;
         public ProgressInfoCollection ProgressCollection => m_progressCollection;
         
@@ -41,16 +52,17 @@ namespace PluginUpdater.ViewModels
             }
         }
 
-        public InstallPluginsViewModel(PluginsCollection plugins, PluginsUsedCollection pluginsUsed, string installPath)
+        public InstallPluginsViewModel(PluginsCollection plugins, PluginsUsedCollection pluginsUsed, string installPath, IPluginsInstaller pluginsInstaller)
         {
             m_plugins = plugins;
             m_installPath = installPath;
             m_pluginsUsed = pluginsUsed;
+            m_pluginsInstaller = pluginsInstaller;
         }
 
         public void StartInstall()
         {
-            StartInstall(new PluginsInstaller());
+            StartInstall(m_pluginsInstaller);
         }
 
         public async Task StartInstall(IPluginsInstaller pluginsInstaller)
@@ -60,7 +72,7 @@ namespace PluginUpdater.ViewModels
                 m_progressCollection = new ProgressInfoCollection();
 
                 pluginsInstaller.InstallPath = m_installPath;
-                pluginsInstaller.ProgressAction = progressInfo => { ProgressChange(progressInfo); };
+                pluginsInstaller.ProgressEvent += (obj, progressInfo) => { ProgressChange(progressInfo); };
 
                 var pluginsNeedDelete = FilterRemovePlugins();
                 var pluginsNeedInstall = FilterNewPlugins();
@@ -99,13 +111,11 @@ namespace PluginUpdater.ViewModels
 
         public IEnumerable<IPlugin> FilterNewPlugins()
         {
-            //return m_plugins.Where(p => p.Checked && m_pluginsUsed.IsNew(p));
             return m_plugins.Where(p => p.Checked && m_pluginsUsed.IsNew(p)).Select( p=> p.Plugin);
         }
 
         public IEnumerable<IPlugin> FilterRemovePlugins()
         {
-            //return m_plugins.Where(p => !p.Checked && m_pluginsUsed.IsExist(p));
             return m_plugins.Where(p => !p.Checked && m_pluginsUsed.IsExist(p)).Select(p => p.Plugin);
         }
         
@@ -113,6 +123,36 @@ namespace PluginUpdater.ViewModels
         {
             if (CloseAction != null)
                 CloseAction();
+        }
+
+        public void Closing(CancelEventArgs args)
+        {
+            if (!IsCompleted)
+            {
+                IsCompleted = true;
+                args.Cancel = true;
+                m_pluginsInstaller.Cancel();
+            }
+        }
+
+        private void Cancel()
+        {
+            if (!IsCompleted)
+            {
+                IsCompleted = true;
+                m_pluginsInstaller.Cancel();
+            }
+        }
+
+        public RelayCommand CancelCommand
+        {
+            get
+            {
+                return new RelayCommand(obj =>
+                {
+                    Cancel();
+                });
+            }
         }
     }
 }

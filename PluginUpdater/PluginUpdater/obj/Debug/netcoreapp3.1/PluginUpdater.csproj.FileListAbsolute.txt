@@ -27,13 +27,11 @@ E:\Projects\TESTS\GitPluginUpdater\PluginUpdater\PluginUpdater\bin\Debug\netcore
 E:\Projects\TESTS\GitPluginUpdater\PluginUpdater\PluginUpdater\bin\Debug\netcoreapp3.1\PluginUpdater.dll
 E:\Projects\TESTS\GitPluginUpdater\PluginUpdater\PluginUpdater\bin\Debug\netcoreapp3.1\PluginUpdater.pdb
 E:\Projects\TESTS\GitPluginUpdater\PluginUpdater\PluginUpdater\obj\Debug\netcoreapp3.1\PluginUpdater.csproj.AssemblyReference.cache
-E:\Projects\TESTS\GitPluginUpdater\PluginUpdater\PluginUpdater\obj\Debug\netcoreapp3.1\Controls\InstallPlugins.g.cs
 E:\Projects\TESTS\GitPluginUpdater\PluginUpdater\PluginUpdater\obj\Debug\netcoreapp3.1\MainWindow.g.cs
 E:\Projects\TESTS\GitPluginUpdater\PluginUpdater\PluginUpdater\obj\Debug\netcoreapp3.1\App.g.cs
 E:\Projects\TESTS\GitPluginUpdater\PluginUpdater\PluginUpdater\obj\Debug\netcoreapp3.1\GeneratedInternalTypeHelper.g.cs
 E:\Projects\TESTS\GitPluginUpdater\PluginUpdater\PluginUpdater\obj\Debug\netcoreapp3.1\PluginUpdater_MarkupCompile.cache
 E:\Projects\TESTS\GitPluginUpdater\PluginUpdater\PluginUpdater\obj\Debug\netcoreapp3.1\PluginUpdater_MarkupCompile.lref
-E:\Projects\TESTS\GitPluginUpdater\PluginUpdater\PluginUpdater\obj\Debug\netcoreapp3.1\Controls\InstallPlugins.baml
 E:\Projects\TESTS\GitPluginUpdater\PluginUpdater\PluginUpdater\obj\Debug\netcoreapp3.1\MainWindow.baml
 E:\Projects\TESTS\GitPluginUpdater\PluginUpdater\PluginUpdater\obj\Debug\netcoreapp3.1\PluginUpdater.g.resources
 E:\Projects\TESTS\GitPluginUpdater\PluginUpdater\PluginUpdater\obj\Debug\netcoreapp3.1\PluginUpdater.AssemblyInfoInputs.cache
@@ -43,3 +41,5 @@ E:\Projects\TESTS\GitPluginUpdater\PluginUpdater\PluginUpdater\obj\Debug\netcore
 E:\Projects\TESTS\GitPluginUpdater\PluginUpdater\PluginUpdater\obj\Debug\netcoreapp3.1\PluginUpdater.pdb
 E:\Projects\TESTS\GitPluginUpdater\PluginUpdater\PluginUpdater\obj\Debug\netcoreapp3.1\PluginUpdater.genruntimeconfig.cache
 E:\Projects\TESTS\GitPluginUpdater\PluginUpdater\PluginUpdater\obj\Debug\netcoreapp3.1\Controls\ControlStyles.baml
+E:\Projects\TESTS\GitPluginUpdater\PluginUpdater\PluginUpdater\obj\Debug\netcoreapp3.1\Controls\InstallPluginsDialog.g.cs
+E:\Projects\TESTS\GitPluginUpdater\PluginUpdater\PluginUpdater\obj\Debug\netcoreapp3.1\Controls\InstallPluginsDialog.baml

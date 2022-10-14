@@ -7,7 +7,7 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="Controls\InstallPlugins.xaml.cs">
+    <Compile Update="Controls\InstallPluginsDialog.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
@@ -15,7 +15,7 @@
     <Page Update="Controls\ControlStyles.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Controls\InstallPlugins.xaml">
+    <Page Update="Controls\InstallPluginsDialog.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="MainWindow.xaml">

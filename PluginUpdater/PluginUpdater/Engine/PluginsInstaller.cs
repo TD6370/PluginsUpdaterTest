@@ -12,19 +12,40 @@ namespace PluginUpdater.Engine
         public string InstallPath { get; set; }
 
         public Action<IProgressInfo> ProgressAction { get; set; }
-        
+
+        public event EventHandler<IProgressInfo> ProgressEvent;
+
         public Task InstallPluginsAsync(IEnumerable<IPlugin> plugins);
 
         public Task DeletePluginsAsync(IEnumerable<IPlugin> plugins);
+
+        public void Cancel();
     }
 
     public class PluginsInstaller : IPluginsInstaller
     {
+        private int m_progressInstallValue;
+
+        public event EventHandler<IProgressInfo> ProgressEvent;
+
         public string InstallPath { get; set; }
 
         public Action<IProgressInfo> ProgressAction { get; set; }
 
-        private int m_progressInstallValue;
+        CancellationTokenSource m_cancelTokenSource;
+        private CancellationToken m_cancelToken;
+        private Object m_cancelLock;
+
+        public PluginsInstaller()
+        {
+            m_cancelTokenSource = new CancellationTokenSource();
+            m_cancelToken = m_cancelTokenSource.Token;
+        }
+
+        public void Cancel()
+        {
+            m_cancelTokenSource.Cancel();
+        }
 
         public async Task InstallPluginsAsync(IEnumerable<IPlugin> plugins)
         {
@@ -33,6 +54,13 @@ namespace PluginUpdater.Engine
                 foreach (var plugin in plugins)
                 { 
                     var pluginVM = new PluginViewModel(plugin);
+                    var typeAction = pluginVM.Status == StatusChecked.NeedUpdated ? TypeAction.Update : TypeAction.Install;
+
+                    if (m_cancelToken.IsCancellationRequested)
+                    {
+                        OnProgressChanged(new ProgressInfo(pluginVM, m_progressInstallValue, typeAction, TypeResult.Cancel));
+                        return;
+                    }
 
                     string pathInstall = string.Concat(InstallPath, $"\\{plugin.ID}");
                     bool isExist = Storage.Instance.CheckDirectory(pathInstall);
@@ -41,26 +69,33 @@ namespace PluginUpdater.Engine
                         pluginVM.Delete(pathInstall);
                     }
 
-                    var typeAction = pluginVM.Status == StatusChecked.NeedUpdated ? TypeAction.Update : TypeAction.Install;
-
-                    if (ProgressAction != null)
-                        ProgressAction(new ProgressInfo(pluginVM, m_progressInstallValue, typeAction));
-
+                    OnProgressChanged(new ProgressInfo(pluginVM, m_progressInstallValue, typeAction));
                     pluginVM.DownloadProgressChanged = DownloadProgressChanged;
 
 # if DEBUG
                     Thread.Sleep(500);
+                    //Thread.Sleep(2000);
 #endif
-                    pluginVM.Install(pathInstall);
+                    var result = pluginVM.Install(pathInstall);
+                    bool isFail = !string.IsNullOrEmpty(result);
+                    TypeResult statusResult = isFail ? TypeResult.Fail : TypeResult.Comleted;
 
                     m_progressInstallValue++;
-                    if (ProgressAction != null)
-                        ProgressAction(new ProgressInfo(pluginVM, m_progressInstallValue, typeAction, true));
+                    OnProgressChanged(new ProgressInfo(pluginVM, m_progressInstallValue, typeAction, statusResult));
                 }
 #if DEBUG
                 Thread.Sleep(500);
 #endif
             });
+        }
+
+        private void OnProgressChanged(IProgressInfo progressInfo)
+        {
+            EventHandler<IProgressInfo> handler = ProgressEvent;
+            if (handler != null)
+            {
+                handler(this, progressInfo);
+            }
         }
 
         public async Task DeletePluginsAsync(IEnumerable<IPlugin> plugins)
@@ -73,25 +108,32 @@ namespace PluginUpdater.Engine
                 {
                     var pluginVM = new PluginViewModel(plugin);
 
-                    if (ProgressAction != null)
-                        ProgressAction(new ProgressInfo(pluginVM, m_progressInstallValue, TypeAction.Delete));
+                    if (m_cancelToken.IsCancellationRequested)
+                    {
+                        OnProgressChanged(new ProgressInfo(pluginVM, m_progressInstallValue, TypeAction.Delete, TypeResult.Cancel));
+                        return;
+                    }
+                    OnProgressChanged(new ProgressInfo(pluginVM, m_progressInstallValue, TypeAction.Delete));
 
                     string pathInstall = string.Concat(InstallPath, $"\\{plugin.ID}");
                     bool isExist = Storage.Instance.CheckDirectory(pathInstall);
+                    bool isFail = false;
                     if (isExist)
                     {
                         if (ProgressAction != null)
                             ProgressAction(new ProgressInfo(pluginVM, m_progressInstallValue, TypeAction.Delete));
 
-                        pluginVM.Delete(pathInstall);
+                        var result = pluginVM.Delete(pathInstall);
+                        isFail = !string.IsNullOrEmpty(result);
                     }
+                    TypeResult statusResult = isFail ? TypeResult.Fail : TypeResult.Comleted;
 
                     m_progressInstallValue++;
-                    if (ProgressAction != null)
-                        ProgressAction(new ProgressInfo(pluginVM, m_progressInstallValue, TypeAction.Delete, true));
+                    OnProgressChanged(new ProgressInfo(pluginVM, m_progressInstallValue, TypeAction.Delete, statusResult));
 # if DEBUG
                     //TEST
                     Thread.Sleep(500);
+                    //Thread.Sleep(2000);
 #endif
                 }
             });

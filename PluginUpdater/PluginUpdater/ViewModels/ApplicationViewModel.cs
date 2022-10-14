@@ -61,7 +61,7 @@ namespace PluginUpdater.ViewModels
         public bool IsFail
         {
             get { return !string.IsNullOrEmpty(WarningMessage) &&
-                    WarningMessage.Equals(m_waitMessage); }
+                    !WarningMessage.Equals(m_waitMessage); }
         }
 
         public ApplicationViewModel()
@@ -120,16 +120,18 @@ namespace PluginUpdater.ViewModels
             {
                 return new RelayCommand(obj => 
                 { 
-                    RunInstallPlugins(); 
+                    RunInstallPlugins(new PluginsInstaller()); 
                 });
             }
         }
 
-        private void RunInstallPlugins()
+        private void RunInstallPlugins(IPluginsInstaller pluginsInstaller)
         {
             try
             {
-                InstallPluginsViewModel installVM = new InstallPluginsViewModel(m_plugins, m_pluginsUsed, m_config.PluginsInstallPath);
+                InstallPluginsViewModel installVM = new InstallPluginsViewModel(m_plugins, m_pluginsUsed, m_config.PluginsInstallPath, pluginsInstaller);
+                pluginsInstaller.ProgressEvent += (obj, progressInfo) => { ProgressInstallChange(progressInfo); };
+
 
                 if (!installVM.IsInstallValid())
                 {
@@ -137,15 +139,17 @@ namespace PluginUpdater.ViewModels
                     return;
                 }
 
-                var installControl = new InstallPlugins();
+                var installControl = new InstallPluginsDialog();
                 installVM.CloseAction = () => { installControl.Close(); };
                 installControl.DataContext = installVM;
                 SwithVisible();
 
                 installControl.ShowDialog();
+
+                m_pluginsUsed.Save();
+
                 if (installVM.IsCompleted)
                 {
-                    m_pluginsUsed.UpdateByCheckedChange(m_plugins);
                     Storage.Instance.RunApplication(m_config.PluginApplicationOwnerPath);
                     Exit();
                 }
@@ -160,6 +164,27 @@ namespace PluginUpdater.ViewModels
                 MessageBox.Show(ex.Message, "Error on Install plugins", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
+        private void ProgressInstallChange(IProgressInfo _progressInfo)
+        {
+            ProgressInfo progressInfo = _progressInfo as ProgressInfo;
+            WpfHelper.InvokeMethod(() =>
+            {
+                switch (progressInfo.StatusResult)
+                {
+                    case TypeResult.Comleted:
+                        m_pluginsUsed.Completed(progressInfo);
+                        Plugins.Completed(progressInfo.Plagin);
+                        break;
+                    case TypeResult.Fail:
+                        var message = progressInfo.ErrorMessage;
+                        break;
+                    case TypeResult.Cancel:
+                        break;
+                }
+            });
+        }
+
 
         private void SwithVisible()
         {

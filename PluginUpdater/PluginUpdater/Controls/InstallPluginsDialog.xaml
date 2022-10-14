@@ -1,9 +1,10 @@
-﻿<Window x:Class="PluginUpdater.Controls.InstallPlugins"
+﻿<Window x:Class="PluginUpdater.Controls.InstallPluginsDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:PluginUpdater.Controls"
+        xmlns:local="clr-namespace:PluginUpdater"
+        
         mc:Ignorable="d"
         Title="Install plugins" 
         WindowStartupLocation="CenterScreen"
@@ -12,6 +13,16 @@
         ShowInTaskbar="False"
         ResizeMode="NoResize"
         >
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/PluginUpdater;component/Controls/ControlStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <local:InverseBoolToVisibilityConverter x:Key="inverseBoolToVisibilityConverter" />
+            <local:StatusResultToColorConverter x:Key="statusResultToColorConverter" />
+        </ResourceDictionary>
+    </Window.Resources>
     <Grid>
        
         <Grid.RowDefinitions>
@@ -53,19 +64,8 @@
                                     Margin="1"
                                     BorderThickness="1"
                                     BorderBrush="DarkGray"
+                                    Background="{Binding StatusResult, Converter={StaticResource statusResultToColorConverter}, ConverterParameter='Title'}"
                                     >
-                                    <Border.Style>
-                                        <Style TargetType="Border">
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding IsComleted}" Value="True">
-                                                    <Setter Property="Background" Value="LightGray"/>
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding IsComleted}" Value="False">
-                                                    <Setter Property="Background" Value="LightYellow"/>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Border.Style>
                                     
                                     <Grid>
                                         <Grid.RowDefinitions>
@@ -86,19 +86,8 @@
                                                     CornerRadius="0"
                                                     Padding="1"
                                                     Margin="5,0"
+                                                    Background="{Binding StatusResult, Converter={StaticResource statusResultToColorConverter}, ConverterParameter=''}"
                                                     >
-                                                <Border.Style>
-                                                    <Style TargetType="Border">
-                                                        <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding IsComleted}" Value="True">
-                                                                <Setter Property="Background" Value="#FFB8B8B8"/>
-                                                            </DataTrigger>
-                                                            <DataTrigger Binding="{Binding IsComleted}" Value="False">
-                                                                <Setter Property="Background" Value="Yellow"/>
-                                                            </DataTrigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </Border.Style>
                                                 <TextBlock 
                                                     Background="Transparent"
                                                     FontWeight="Bold"
@@ -131,6 +120,21 @@
                 </ItemsControl>
             
             </ScrollViewer>
+        </Grid>
+
+        <Grid
+            Grid.Row="2">
+            <Button
+                Width="150"
+                HorizontalAlignment="Left"
+                Margin="5"
+                VerticalAlignment="Bottom"
+                Height="30"
+                Style="{StaticResource ButtonLightStyle}"
+                Content="Отстановить"
+                IsEnabled="{Binding IsCompleted, Converter={StaticResource inverseBoolToVisibilityConverter}}"
+                Command="{Binding CancelCommand}"
+                />
         </Grid>
     </Grid>
 </Window>

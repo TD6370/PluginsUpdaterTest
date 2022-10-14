@@ -68,6 +68,10 @@ namespace PluginUpdater.Engine
                     if (dataStream == null)
                         return default;
 
+#if DEBUG
+                    //TEST
+                    System.Threading.Thread.Sleep(2000);
+#endif
                     data = DeserializeObject<T>(dataStream);
                 }
                 return data;
